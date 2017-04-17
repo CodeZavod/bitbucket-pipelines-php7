@@ -30,6 +30,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     wget \
     openssl \
     autoconf \
+    openssh-client \
     g++ \
     make \
     # libssl-dev \
