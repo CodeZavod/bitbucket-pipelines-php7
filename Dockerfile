@@ -8,11 +8,6 @@ MAINTAINER Eduardo Bizarro <edbizarro@gmail.com>
 # Set correct environment variables
 ENV HOME /root
 
-# Ensure UTF-8
-ENV LANG       en_US.UTF-8
-ENV LC_ALL     en_US.UTF-8
-RUN locale-gen en_US.UTF-8
-
 # MYSQL ROOT PASSWORD
 ARG MYSQL_ROOT_PASS=root    
 
@@ -20,6 +15,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
     DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    locales \
     software-properties-common \
     python-software-properties \
     build-essential \
@@ -39,6 +35,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     # libcurl3 \
     --no-install-recommends && rm -r /var/lib/apt/lists/* \
     && apt-get --purge autoremove -y
+
+# Ensure UTF-8
+ENV LANG       en_US.UTF-8
+ENV LC_ALL     en_US.UTF-8
+RUN locale-gen en_US.UTF-8
 
 # OpenSSL
 RUN mkdir -p /usr/local/openssl/include/openssl/ && \

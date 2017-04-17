@@ -15,7 +15,7 @@
 ### Sample `bitbucket-pipelines.yml`
 
 ```YAML
-image: edbizarro/bitbucket-pipelines-php7
+image: andmetoo/bitbucket-pipelines-php7
 pipelines:
   default:
     - step:
