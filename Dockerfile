@@ -49,12 +49,9 @@ RUN mkdir -p /usr/local/openssl/include/openssl/ && \
     ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/local/openssl/lib/
 
 # NODE JS
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get install nodejs -qq && \
     npm install -g gulp-cli 
-
-# YARN
-RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
 # MYSQL
 # /usr/bin/mysqld_safe
@@ -67,24 +64,6 @@ RUN add-apt-repository -y ppa:ondrej/php && \
     DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq php-pear php7.0-dev php7.0-fpm php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli php7.0-imap && \
     apt-get remove --purge php5 php5-common
-
-# MONGO extension
-RUN pecl install mongodb && \
-    echo "extension=mongodb.so" > /etc/php/7.0/fpm/conf.d/20-mongodb.ini && \
-    echo "extension=mongodb.so" > /etc/php/7.0/cli/conf.d/20-mongodb.ini && \
-    echo "extension=mongodb.so" > /etc/php/7.0/mods-available/mongodb.ini
-
-# Run xdebug installation.
-RUN wget --no-check-certificate https://xdebug.org/files/xdebug-2.4.0rc4.tgz && \
-    tar -xzf xdebug-2.4.0rc4.tgz && \
-    rm xdebug-2.4.0rc4.tgz && \
-    cd xdebug-2.4.0RC4 && \
-    phpize && \
-    ./configure --enable-xdebug && \
-    make && \
-    cp modules/xdebug.so /usr/lib/. && \
-    echo 'zend_extension="/usr/lib/xdebug.so"' > /etc/php/7.0/cli/conf.d/20-xdebug.ini && \
-    echo 'xdebug.remote_enable=1' >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
 
 # Time Zone
 RUN echo "date.timezone = UTC" > /etc/php/7.0/cli/conf.d/date_timezone.ini && \
@@ -101,12 +80,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Goto temporary directory.
 WORKDIR /tmp
 
-# Run phpunit installation.
-RUN composer selfupdate && \
-    composer global require hirak/prestissimo --prefer-dist --no-interaction && \
-    composer require "phpunit/phpunit" --prefer-dist --no-interaction && \
-    ln -s /tmp/vendor/bin/phpunit /usr/local/bin/phpunit && \
-    rm -rf /root/.composer/cache/*
+# Codecept Support
+wget http://codeception.com/codecept.phar
+chmod +x codecept.phar
+sudo mv codecept.phar /usr/local/bin/codecept
 
 # Deployer
 RUN curl -L http://deployer.org/deployer.phar -o deployer.phar && \
