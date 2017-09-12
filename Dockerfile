@@ -1,6 +1,7 @@
 FROM ubuntu:16.04
 
-MAINTAINER andmetoo <hello@notme.pw>
+LABEL maintainer="imposibrus <root@imposibrus.space>"
+LABEL version="1.2.0"
 
 # Use baseimage-docker's init system.
 #CMD ["/sbin/my_init"]
@@ -54,8 +55,7 @@ RUN chmod 700 /root/.ssh/
 
 # NODE JS
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-    apt-get install nodejs -qq && \
-    npm install -g gulp-cli 
+    apt-get install nodejs -qq
 
 # MYSQL
 # /usr/bin/mysqld_safe
@@ -64,9 +64,7 @@ RUN bash -c 'debconf-set-selections <<< "mysql-server-5.7 mysql-server/root_pass
 		DEBIAN_FRONTEND=noninteractive apt-get update && \
 		DEBIAN_FRONTEND=noninteractive apt-get install -qqy mysql-server-5.7	
 
-RUN rm -rf /etc/mysql/mysql.conf.d/disable_strict_mode.cnf && \
-    touch /etc/mysql/mysql.conf.d/disable_strict_mode.cnf && \
-    echo "[mysqld] \n sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION" >> /etc/mysql/mysql.conf.d/disable_strict_mode.cnf
+RUN echo "[mysqld] \n sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION" > /etc/mysql/mysql.conf.d/disable_strict_mode.cnf
 
 # PHP Extensions
 RUN add-apt-repository -y ppa:ondrej/php && \
@@ -98,7 +96,7 @@ RUN add-apt-repository -y ppa:ondrej/php && \
       php7.0-intl \
       php7.0-json \
       php7.0-ldap \
-      php7.0-libsodium \
+#      php7.0-libsodium \
       php7.0-mbstring \
       php7.0-mcrypt \
       php7.0-memcached \
@@ -160,5 +158,5 @@ RUN wget http://deployer.org/deployer.phar -o deployer.phar && \
     chmod +x /usr/local/bin/dep
 
 RUN apt-get clean -y && \
-        apt-get autoremove -y && \
-		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
