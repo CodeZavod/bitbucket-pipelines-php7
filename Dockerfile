@@ -136,10 +136,10 @@ RUN add-apt-repository -y ppa:ondrej/php && \
 RUN echo "date.timezone = UTC" > /etc/php/7.0/cli/conf.d/date_timezone.ini && \
     echo "date.timezone = UTC" > /etc/php/7.0/fpm/conf.d/date_timezone.ini
 
-VOLUME /root/composer
+VOLUME /root/.composer
 
 # Environmental Variables
-ENV COMPOSER_HOME /root/composer
+ENV COMPOSER_HOME /root/.composer
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
