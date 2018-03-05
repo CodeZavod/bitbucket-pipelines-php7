@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 LABEL maintainer="imposibrus <root@imposibrus.space>"
-LABEL version="1.2.0"
+LABEL version="1.2.2"
 
 # Use baseimage-docker's init system.
 #CMD ["/sbin/my_init"]
@@ -62,79 +62,80 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 RUN bash -c 'debconf-set-selections <<< "mysql-server-5.7 mysql-server/root_password password $MYSQL_ROOT_PASS"' && \
 		bash -c 'debconf-set-selections <<< "mysql-server-5.7 mysql-server/root_password_again password $MYSQL_ROOT_PASS"' && \
 		DEBIAN_FRONTEND=noninteractive apt-get update && \
-		DEBIAN_FRONTEND=noninteractive apt-get install -qqy mysql-server-5.7	
+		DEBIAN_FRONTEND=noninteractive apt-get install -qqy mysql-server-5.7
 
 RUN echo "[mysqld] \n sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION" > /etc/mysql/mysql.conf.d/disable_strict_mode.cnf
 
 # PHP Extensions
+ENV PHP_VERSION 7.1
 RUN add-apt-repository -y ppa:ondrej/php && \
     DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq php-pear \
-      php7.0-dev \
-      php7.0-cli \
-      php7.0-fpm \
-      php7.0-apcu \
-      php7.0-bcmath \
-      php7.0-bz2 \
-      php7.0-calendar \
-      php7.0-common \
-      php7.0-ctype \
-      php7.0-curl \
-      php7.0-dba \
-      php7.0-dom \
-      php7.0-embed \
-      php7.0-enchant \
-      php7.0-exif \
-      php7.0-fpm \
-      php7.0-ftp \
-      php7.0-gd \
-      php7.0-gettext \
-      php7.0-gmp \
-      php7.0-iconv \
-      php7.0-imagick \
-      php7.0-imap \
-      php7.0-intl \
-      php7.0-json \
-      php7.0-ldap \
-#      php7.0-libsodium \
-      php7.0-mbstring \
-      php7.0-mcrypt \
-      php7.0-memcached \
-      php7.0-mongodb \
-      php7.0-mysqli \
-      php7.0-mysqlnd \
-      php7.0-odbc \
-      php7.0-opcache \
-#      php7.0-openssl \
-      php7.0-pdo \
-      php7.0-pgsql \
-      php7.0-phar \
-      php7.0-phpdbg \
-      php7.0-posix \
-      php7.0-pspell \
-      php7.0-redis \
-      php7.0-shmop \
-      php7.0-snmp \
-      php7.0-soap \
-      php7.0-sockets \
-      php7.0-sqlite3 \
-      php7.0-sysvmsg \
-      php7.0-sysvsem \
-      php7.0-sysvshm \
-      php7.0-tidy \
-      php7.0-tokenizer \
-      php7.0-wddx \
-      php7.0-xdebug \
-      php7.0-xml \
-      php7.0-xmlreader \
-      php7.0-xmlrpc \
-      php7.0-xmlwriter \
-      php7.0-xsl \
-      php7.0-zip 
+      php${PHP_VERSION}-dev \
+      php${PHP_VERSION}-cli \
+      php${PHP_VERSION}-fpm \
+      php${PHP_VERSION}-apcu \
+      php${PHP_VERSION}-bcmath \
+      php${PHP_VERSION}-bz2 \
+      php${PHP_VERSION}-calendar \
+      php${PHP_VERSION}-common \
+      php${PHP_VERSION}-ctype \
+      php${PHP_VERSION}-curl \
+      php${PHP_VERSION}-dba \
+      php${PHP_VERSION}-dom \
+      php${PHP_VERSION}-embed \
+      php${PHP_VERSION}-enchant \
+      php${PHP_VERSION}-exif \
+      php${PHP_VERSION}-fpm \
+      php${PHP_VERSION}-ftp \
+      php${PHP_VERSION}-gd \
+      php${PHP_VERSION}-gettext \
+      php${PHP_VERSION}-gmp \
+      php${PHP_VERSION}-iconv \
+      php${PHP_VERSION}-imagick \
+      php${PHP_VERSION}-imap \
+      php${PHP_VERSION}-intl \
+      php${PHP_VERSION}-json \
+      php${PHP_VERSION}-ldap \
+#      php${PHP_VERSION}-libsodium \
+      php${PHP_VERSION}-mbstring \
+      php${PHP_VERSION}-mcrypt \
+      php${PHP_VERSION}-memcached \
+      php${PHP_VERSION}-mongodb \
+      php${PHP_VERSION}-mysqli \
+      php${PHP_VERSION}-mysqlnd \
+      php${PHP_VERSION}-odbc \
+      php${PHP_VERSION}-opcache \
+#      php${PHP_VERSION}-openssl \
+      php${PHP_VERSION}-pdo \
+      php${PHP_VERSION}-pgsql \
+      php${PHP_VERSION}-phar \
+      php${PHP_VERSION}-phpdbg \
+      php${PHP_VERSION}-posix \
+      php${PHP_VERSION}-pspell \
+      php${PHP_VERSION}-redis \
+      php${PHP_VERSION}-shmop \
+      php${PHP_VERSION}-snmp \
+      php${PHP_VERSION}-soap \
+      php${PHP_VERSION}-sockets \
+      php${PHP_VERSION}-sqlite3 \
+      php${PHP_VERSION}-sysvmsg \
+      php${PHP_VERSION}-sysvsem \
+      php${PHP_VERSION}-sysvshm \
+      php${PHP_VERSION}-tidy \
+      php${PHP_VERSION}-tokenizer \
+      php${PHP_VERSION}-wddx \
+      php${PHP_VERSION}-xdebug \
+      php${PHP_VERSION}-xml \
+      php${PHP_VERSION}-xmlreader \
+      php${PHP_VERSION}-xmlrpc \
+      php${PHP_VERSION}-xmlwriter \
+      php${PHP_VERSION}-xsl \
+      php${PHP_VERSION}-zip
 
 # Time Zone
-RUN echo "date.timezone = UTC" > /etc/php/7.0/cli/conf.d/date_timezone.ini && \
-    echo "date.timezone = UTC" > /etc/php/7.0/fpm/conf.d/date_timezone.ini
+RUN echo "date.timezone = UTC" > "/etc/php/${PHP_VERSION}/cli/conf.d/date_timezone.ini" && \
+    echo "date.timezone = UTC" > "/etc/php/${PHP_VERSION}/fpm/conf.d/date_timezone.ini"
 
 VOLUME /root/.composer
 
@@ -146,16 +147,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Goto temporary directory.
 WORKDIR /tmp
-
-# Codecept Support
-RUN wget http://codeception.com/codecept.phar && \
-    chmod +x codecept.phar && \
-    mv codecept.phar /usr/local/bin/codecept
-
-# Deployer
-RUN wget http://deployer.org/deployer.phar -o deployer.phar && \
-    mv deployer.phar /usr/local/bin/dep && \
-    chmod +x /usr/local/bin/dep
 
 RUN apt-get clean -y && \
     apt-get autoremove -y && \
