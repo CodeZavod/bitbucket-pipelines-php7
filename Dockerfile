@@ -1,8 +1,5 @@
 FROM ubuntu:16.04
 
-LABEL maintainer="imposibrus <root@imposibrus.space>"
-LABEL version="1.2.2"
-
 # Use baseimage-docker's init system.
 #CMD ["/sbin/my_init"]
 
@@ -137,7 +134,7 @@ RUN add-apt-repository -y ppa:ondrej/php && \
 RUN echo "date.timezone = UTC" > "/etc/php/${PHP_VERSION}/cli/conf.d/date_timezone.ini" && \
     echo "date.timezone = UTC" > "/etc/php/${PHP_VERSION}/fpm/conf.d/date_timezone.ini"
 
-VOLUME /root/.composer
+#VOLUME /root/.composer
 
 # Environmental Variables
 ENV COMPOSER_HOME /root/.composer
@@ -145,9 +142,15 @@ ENV COMPOSER_HOME /root/.composer
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Install Laravel Envoy
+RUN composer global require "laravel/envoy=^1.4"
+
 # Goto temporary directory.
 WORKDIR /tmp
 
 RUN apt-get clean -y && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+LABEL maintainer="imposibrus <root@imposibrus.space>"
+LABEL version="1.3.1"
