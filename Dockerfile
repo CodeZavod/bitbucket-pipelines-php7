@@ -152,5 +152,7 @@ RUN apt-get clean -y && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN npm i npm -g
+
 LABEL maintainer="imposibrus <root@imposibrus.space>"
-LABEL version="1.3.1"
+LABEL version="1.3.2"
