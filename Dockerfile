@@ -143,7 +143,7 @@ ENV COMPOSER_HOME /root/.composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install Laravel Envoy
-RUN composer global require "laravel/envoy=^1.4"
+RUN composer global require 'laravel/envoy=^1.4' 'symplify/easy-coding-standard:5.4.14'
 
 # Goto temporary directory.
 WORKDIR /tmp
@@ -155,4 +155,4 @@ RUN apt-get clean -y && \
 RUN npm i npm -g
 
 LABEL maintainer="imposibrus <root@imposibrus.space>"
-LABEL version="1.3.2"
+LABEL version="1.3.3"
