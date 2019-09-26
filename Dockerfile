@@ -64,7 +64,7 @@ RUN bash -c 'debconf-set-selections <<< "mysql-server-5.7 mysql-server/root_pass
 RUN echo "[mysqld] \n sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION" > /etc/mysql/mysql.conf.d/disable_strict_mode.cnf
 
 # PHP Extensions
-ENV PHP_VERSION 7.1
+ENV PHP_VERSION 7.2
 RUN add-apt-repository -y ppa:ondrej/php && \
     DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq php-pear \
@@ -96,7 +96,7 @@ RUN add-apt-repository -y ppa:ondrej/php && \
       php${PHP_VERSION}-ldap \
 #      php${PHP_VERSION}-libsodium \
       php${PHP_VERSION}-mbstring \
-      php${PHP_VERSION}-mcrypt \
+#      php${PHP_VERSION}-mcrypt \
       php${PHP_VERSION}-memcached \
       php${PHP_VERSION}-mongodb \
       php${PHP_VERSION}-mysqli \
