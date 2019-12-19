@@ -6,9 +6,6 @@ FROM ubuntu:16.04
 # Set correct environment variables
 ENV HOME /root
 
-# MYSQL ROOT PASSWORD
-ARG MYSQL_ROOT_PASS=root    
-
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
     DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y && \
@@ -46,22 +43,11 @@ RUN mkdir -p /usr/local/openssl/include/openssl/ && \
     ln -s /usr/lib/x86_64-linux-gnu/libssl.a /usr/local/openssl/lib/libssl.a && \
     ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/local/openssl/lib/
 
-RUN mkdir /root/.ssh/
-
-RUN chmod 700 /root/.ssh/
+RUN mkdir /root/.ssh/ && chmod 700 /root/.ssh/
 
 # NODE JS
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get install nodejs -qq
-
-# MYSQL
-# /usr/bin/mysqld_safe
-RUN bash -c 'debconf-set-selections <<< "mysql-server-5.7 mysql-server/root_password password $MYSQL_ROOT_PASS"' && \
-		bash -c 'debconf-set-selections <<< "mysql-server-5.7 mysql-server/root_password_again password $MYSQL_ROOT_PASS"' && \
-		DEBIAN_FRONTEND=noninteractive apt-get update && \
-		DEBIAN_FRONTEND=noninteractive apt-get install -qqy mysql-server-5.7
-
-RUN echo "[mysqld] \n sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION" > /etc/mysql/mysql.conf.d/disable_strict_mode.cnf
 
 # PHP Extensions
 ENV PHP_VERSION 7.2
@@ -134,7 +120,7 @@ RUN add-apt-repository -y ppa:ondrej/php && \
 RUN echo "date.timezone = UTC" > "/etc/php/${PHP_VERSION}/cli/conf.d/date_timezone.ini" && \
     echo "date.timezone = UTC" > "/etc/php/${PHP_VERSION}/fpm/conf.d/date_timezone.ini"
 
-#VOLUME /root/.composer
+ADD php-no-xdebug /usr/local/bin/php-no-xdebug
 
 # Environmental Variables
 ENV COMPOSER_HOME /root/.composer
@@ -143,7 +129,7 @@ ENV COMPOSER_HOME /root/.composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install Laravel Envoy
-RUN composer global require 'laravel/envoy=^1.4' 'symplify/easy-coding-standard:5.4.14'
+RUN composer global require 'laravel/envoy=^1.4'
 
 # Goto temporary directory.
 WORKDIR /tmp
@@ -155,4 +141,4 @@ RUN apt-get clean -y && \
 RUN npm i npm -g
 
 LABEL maintainer="imposibrus <root@imposibrus.space>"
-LABEL version="1.3.3"
+LABEL version="1.3.5"
