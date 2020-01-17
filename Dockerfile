@@ -49,6 +49,10 @@ RUN mkdir /root/.ssh/ && chmod 700 /root/.ssh/
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get install nodejs -qq
 
+# MYSQL
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -qqy mysql-client
+
 # PHP Extensions
 ENV PHP_VERSION 7.2
 RUN add-apt-repository -y ppa:ondrej/php && \
