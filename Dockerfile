@@ -54,7 +54,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -qqy mysql-client
 
 # PHP Extensions
-ENV PHP_VERSION 7.2
+ENV PHP_VERSION 7.1
 RUN add-apt-repository -y ppa:ondrej/php && \
     DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq php-pear \
